@@ -12,6 +12,22 @@ def get_indices_of_item_weights(weights, length, limit):
     """
     YOUR CODE HERE
     """
+    hashtable = HashTable(length)
+
+    # add weights to hashtable
+    for i in range(len(weights)):        
+        hash_table_insert(hashtable, weights[i], i)
+
+    # search for a remainder reach limit
+    for j in range(len(weights)):
+        remainder = limit - weights[j]
+
+        target = hash_table_retrieve(hashtable, remainder)
+        if target is not None:
+            if target > j:
+                return (target, j)
+            else:
+                return (j, target)
 
     return None
 

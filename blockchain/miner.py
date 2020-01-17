@@ -9,6 +9,8 @@ from timeit import default_timer as timer
 
 import random
 
+import json
+
 
 def proof_of_work(last_proof):
     """
@@ -23,9 +25,18 @@ def proof_of_work(last_proof):
     start = timer()
 
     print("Searching for next proof")
-    proof = 0
-    #  TODO: Your code here
+    proof = random.random()
+    # TODO: Your code here
 
+    # hash the last proof
+    last_proof_string_object = json.dumps(last_proof).encode()
+    last_proof_raw_hash = hashlib.sha256(last_proof_string_object)
+    last_proof_hex_hash = last_proof_raw_hash.hexdigest()
+
+    # count backwards from last proof, then double and repeat proof n of types backwards
+    while valid_proof(last_proof_hex_hash, proof) is False:
+        proof += random.random()
+            
     print("Proof found: " + str(proof) + " in " + str(timer() - start))
     return proof
 
@@ -39,8 +50,16 @@ def valid_proof(last_hash, proof):
     IE:  last_hash: ...AE9123456, new hash 123456E88...
     """
 
+    # hash the guess proof
+    new_proof_string_object = json.dumps(proof).encode()
+    new_proof_raw_hash = hashlib.sha256(new_proof_string_object)
+    new_proof_hex_hash = new_proof_raw_hash.hexdigest()
+
     # TODO: Your code here!
-    pass
+    if last_hash[58:] == new_proof_hex_hash[:6]:
+        return True
+    
+    return False
 
 
 if __name__ == '__main__':
@@ -67,7 +86,7 @@ if __name__ == '__main__':
         r = requests.get(url=node + "/last_proof")
         data = r.json()
         new_proof = proof_of_work(data.get('proof'))
-
+        
         post_data = {"proof": new_proof,
                      "id": id}
 
