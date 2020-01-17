@@ -36,16 +36,11 @@ def proof_of_work(last_proof):
     last_proof_raw_hash = hashlib.sha256(last_proof_string_object)
     last_proof_hex_hash = last_proof_raw_hash.hexdigest()
 
-
-    # count backwards from last
+    # count backwards from last proof, then double and repeat proof n of types backwards
     while valid_proof(last_proof_hex_hash, proof, last_proof) is False:
         proof -= 1
-        # if back at beginning double
-
-        # # reset after ten seconds
-        # if timer() - start == 10000:
-            
-
+        
+        # if back at beginning double            
         if proof == (last_proof * i) - last_proof:
             i += 1
             proof = last_proof * i

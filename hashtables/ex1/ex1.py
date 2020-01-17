@@ -15,23 +15,19 @@ def get_indices_of_item_weights(weights, length, limit):
     hashtable = HashTable(length)
 
     # add weights to hashtable
-    # :<key>: weight
-    # :<val: index in weights
-    for i in range(len(weights)):
-        print(weights[i])
-        
+    for i in range(len(weights)):        
         hash_table_insert(hashtable, weights[i], i)
 
+    # search for a remainder reach limit
     for j in range(len(weights)):
         remainder = limit - weights[j]
 
         target = hash_table_retrieve(hashtable, remainder)
-        
         if target is not None:
-            if weights[j] > remainder:
-                return (j, target)
-            else:
+            if target > j:
                 return (target, j)
+            else:
+                return (j, target)
 
     return None
 
