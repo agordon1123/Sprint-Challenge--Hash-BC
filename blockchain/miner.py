@@ -25,11 +25,8 @@ def proof_of_work(last_proof):
     start = timer()
 
     print("Searching for next proof")
-    # proof = 0
-    proof = last_proof
-    # iterator
-    i = 1
-    #  TODO: Your code here
+    proof = random.random()
+    # TODO: Your code here
 
     # hash the last proof
     last_proof_string_object = json.dumps(last_proof).encode()
@@ -37,19 +34,14 @@ def proof_of_work(last_proof):
     last_proof_hex_hash = last_proof_raw_hash.hexdigest()
 
     # count backwards from last proof, then double and repeat proof n of types backwards
-    while valid_proof(last_proof_hex_hash, proof, last_proof) is False:
-        proof -= 1
-        
-        # if back at beginning double            
-        if proof == (last_proof * i) - last_proof:
-            i += 1
-            proof = last_proof * i
-    
+    while valid_proof(last_proof_hex_hash, proof) is False:
+        proof += random.random()
+            
     print("Proof found: " + str(proof) + " in " + str(timer() - start))
     return proof
 
 
-def valid_proof(last_hash, proof, last_proof):
+def valid_proof(last_hash, proof):
     """
     Validates the Proof:  Multi-ouroborus:  Do the last six characters of
     the hash of the last proof match the first six characters of the hash
@@ -57,19 +49,6 @@ def valid_proof(last_hash, proof, last_proof):
 
     IE:  last_hash: ...AE9123456, new hash 123456E88...
     """
-
-    r = requests.get("https://lambda-coin.herokuapp.com/api/last_proof")
-    data = r.json()
-
-    # checking to see if last proof has been found
-    if data.get('proof') != last_proof:
-        # hash
-        print("changing")
-        last_proof_string_object = json.dumps(data.get('proof')).encode()
-        last_proof_raw_hash = hashlib.sha256(last_proof_string_object)
-        last_proof_hex_hash = last_proof_raw_hash.hexdigest()
-        last_hash = last_proof_hex_hash
-
 
     # hash the guess proof
     new_proof_string_object = json.dumps(proof).encode()
