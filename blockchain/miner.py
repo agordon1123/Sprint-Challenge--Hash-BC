@@ -27,6 +27,8 @@ def proof_of_work(last_proof):
     print("Searching for next proof")
     # proof = 0
     proof = last_proof
+    # iterator
+    i = 1
     #  TODO: Your code here
 
     # hash the last proof
@@ -37,6 +39,10 @@ def proof_of_work(last_proof):
     # count backwards from last
     while valid_proof(last_proof_hex_hash, proof) is False:
         proof -= 1
+        # if back at beginning double
+        if proof == (last_proof * i) - last_proof:
+            i += 1
+            proof = last_proof * i
     
     print("Proof found: " + str(proof) + " in " + str(timer() - start))
     return proof
